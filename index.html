@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Iconos-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <!-- CSS only -->
+    <link rel="stylesheet" href="../Preentrega/css/styles.css">
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"             integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!--Toastify-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title> LA JARRA LOCA </title>
+</head>
+<body>
+  <nav class="navbar bg-body-tertiary navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand titulo">LA JARRA LOCA</a>
+      
+      <div class="busqueda" style="width: 45%;">
+        <input id="resultadoBuscar" class="form-control me-2" type="search" placeholder="Inserte su bebida" aria-label="Search">
+        <button class="btn btn-outline-success" onclick="buscar()">Buscar</button>
+      </div>
+      <ul style="width: 15%;">
+        <select id="selectOrden" style="margin-top: 1.3rem;" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option selected>Ordenar por:</option>
+          <option value="1">Mayor a menor</option>
+          <option value="2">Menor a mayor</option>
+          <option value="3">Alfabeticamente</option>
+        </select>
+      </ul>
+      <ul style="list-style: none; margin-top: 1.3rem;"className="navbar-nav me-auto">  
+        <li className="nav-item">
+          <a id="botonCarrito"  data-bs-toggle="modal" data-bs-target="#idModalCarrito" class="btn btn-secondary"><i class="fas fa-shopping-cart fa-1x"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <h2> NUESTRO CATALOGO </h2>
+  <div class="container m-12">
+    <div class="row">
+      <div class="col-4" style="display:flex; justify-content: center;">
+          
+        <button id="botonModoOscuro" class="btn btn-dark">Dark</button>
+
+      </div>
+      <div class="col-4" style="display:flex; justify-content: center;">
+          
+        <button id="botonModoClaro" class="btn btn-light">Light</button>
+
+      </div>
+      <div class="col-4" style="display:flex; justify-content: center;">
+          
+          
+        <button id="agregarBebida" data-bs-toggle="modal" data-bs-target="#idModalAgregarLibro" class="btn btn-secondary">Agregar Bebida</button>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="contenedor">
+    <div id="bebidas" class="row"></div>
+  </div>
+    <!--Modals-->
+    <!--Modal Agregar Libro-->
+  <div class="modal fade" id="idModalAgregarLibro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar bebida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <form>
+            <div class="mb-4">
+              <label for="titulo" class="form-label">Bebida</label>
+              <input type="text" class="form-control" id="BebidaInput" aria-describedby="titulo">
+            </div>
+            <div class="mb-4">
+              <label for="titulo" class="form-label">Tiene alcohol?</label>
+              <input type="checkbox"  id="TieneAlcoholInput">
+                
+            </div>
+            <div class="mb-4">
+              <label for="precio" class="form-label">Precio</label>
+              <input type="text" class="form-control" id="precioInput" aria-describedby="precio">
+              
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="text" id="guardarBebidaBtn" class="btn btn-success" data-bs-dismiss="modal">Guardar bebida</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--Modal Carrito-->
+  <div class="modal fade" id="idModalCarrito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Carrito de Compras</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-bodyCarrito">
+          
+        </div>
+        <div class="row ml-ato">
+          <p id="precioTotal"></p>
+        </div>
+        <div class="modal-footer">
+          
+          
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" data-bs-dismiss="modal" class="btn btn-success" id="botonFinalizarCompra">Finalizar Compra</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+</body>
+<!--Script de JQUARY JS-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<!--Script de Bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
+</script>
+<!--Archivo JS -->
+  <script src="javascript/bebidas.js"></script>
+  <script src="javascript/cargaBebidas.js"></script>
+  <script src="javascript/logica.js"></script>
+<!--Archivo Libreria Sweet Alert-->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--Archivo Libreria TOASTIFY-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+</html>
