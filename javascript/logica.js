@@ -50,10 +50,8 @@ function CargarBebida (){
     };
     const BebidaNueva = new Bebidas(bebida);
 
-    console.log(BebidaNueva)
 
     estanteriaBebida.push(BebidaNueva)
-    console.log(estanteriaBebida)
 
     inputBebida.value = ""
     inputPrecio.value = ""
