@@ -13,7 +13,15 @@ const cargarEstanteriaDesdeApi = () => {
         .then(() => {
             bebidasAlcoholicas.drinks.forEach((bebida) => {
                 const rand = Math.floor(Math.random() * (1500 - 150) + 150);
-                estanteriaBebida.push(new Bebidas (bebida.idDrink, true, bebida.strDrink, rand, bebida.strDrinkThumb));
+                const drink = {
+                    id: bebida.idDrink, 
+                    tieneAlcohol: true, 
+                    nombre: bebida.strDrink,
+                    precio: rand,
+                    imagen: bebida.strDrinkThumb,
+                    cantidad: 1
+                };
+                estanteriaBebida.push(new Bebidas(drink));
             });
             cantidadLlamadas++;
         })
@@ -25,7 +33,15 @@ const cargarEstanteriaDesdeApi = () => {
         .then(() => {
             bebidasNoAlcoholicas.drinks.forEach((bebida) => {
                 const rand = Math.floor(Math.random() * (1500 - 150) + 150);
-                estanteriaBebida.push(new Bebidas (bebida.idDrink, false, bebida.strDrink, rand, bebida.strDrinkThumb));
+                const drink2 = {
+                    id: bebida.idDrink, 
+                    tieneAlcohol: true, 
+                    nombre: bebida.strDrink,
+                    precio: rand,
+                    imagen: bebida.strDrinkThumb,
+                    cantidad: 1
+                };
+                estanteriaBebida.push(new Bebidas(drink2));
             });
             cantidadLlamadas++;
         })

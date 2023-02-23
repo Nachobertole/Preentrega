@@ -9,6 +9,19 @@ $(document).ready(function() {
     }, 500);
 });
 
+let productosEnCarrito = JSON.parse(localStorage.getItem("carrito")) || []
+let ModalCarrito = document.getElementById("modal-bodyCarrito");
+let precioTotal = document.getElementById("precioTotal")
+
+function recargarCarrito(){
+    let carrito = [];
+    productosEnCarrito.forEach((bebida) => {
+        carrito.push(new Bebidas(bebida));
+    });
+    productosEnCarrito = carrito;
+    MostrarProductosEnCarrito(productosEnCarrito)
+}
+recargarCarrito();
 // BUSCADOR 
 function buscar() {
     const resultadoBuscar = document.getElementById("resultadoBuscar").value;
@@ -27,8 +40,16 @@ function CargarBebida (){
     let inputPrecio = document.getElementById("precioInput")
     let InputAlcohol = document.getElementById("TieneAlcoholInput")
 
-    
-    const BebidaNueva = new Bebidas(estanteriaBebida.length+1, TieneAlcoholInput.checked, inputBebida.value, inputPrecio.value, "imagen/vodkasmirnoff.jpg")
+    const bebida = {
+        id: estanteriaBebida.length+1, 
+        tieneAlcohol: TieneAlcoholInput.checked, 
+        nombre: inputBebida.value,
+        precio: inputPrecio.value,
+        imagen: "imagen/vodkasmirnoff.jpg",
+        cantidad:1
+    };
+    const BebidaNueva = new Bebidas(bebida);
+
     console.log(BebidaNueva)
 
     estanteriaBebida.push(BebidaNueva)
@@ -77,7 +98,6 @@ function CargarBebidasEnInicio (array) {
             Toastify({
                 text: `${Bebida.nombre} ha sido agregado al carrito`,
                 duration: 2000,
-                destination: "https://github.com/apvarun/toastify-js",
                 newWindow: true,
                 close: true,
                 gravity: "top",
@@ -152,17 +172,12 @@ if(localStorage.getItem("modoOscuro")){
 } 
 
 // CARRITO
-let productosEnCarrito = JSON.parse(localStorage.getItem("carrito")) || []
-console.log(productosEnCarrito)
+
 function agregarAlCarrito(bebida){
-    console.log(`La bebida ${bebida.nombre} ha sido agregada al carrito. Vale ${bebida.precio}`)
     productosEnCarrito.push(bebida)
-    console.log(productosEnCarrito)
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
-    console.log(localStorage.getItem("carrito"))
 }
 
-let ModalCarrito = document.getElementById("modal-bodyCarrito")
 function MostrarProductosEnCarrito(array){
     ModalCarrito.innerHTML=""
     array.forEach((productoEnCarrito) => {
@@ -174,23 +189,49 @@ function MostrarProductosEnCarrito(array){
                     <h4 class="card-title">${productoEnCarrito.nombre}</h4>
                     
                     <p class="card-text">$${productoEnCarrito.precio}</p> 
+                    <p class="card-text">Total de unidades: ${productoEnCarrito.cantidad}</p>
+                    <p class="card-text">Subtotal: ${productoEnCarrito.precio * productoEnCarrito.cantidad}</p>
+                    <button class= "btn btn-success" id="botonSumarUnidad${productoEnCarrito.id}"><i class=""></i>+1</button>
+                    <button class= "btn btn-danger" id="botonEliminarUnidad${productoEnCarrito.id}"><i class=""></i>-1</button>
                     <button class= "btn btn-danger" id="botonEliminar${productoEnCarrito.id}"><i class="fas fa-trash-alt"></i></button>
                 </div>    
         </div>
         `
         ModalCarrito.appendChild(child);
-
+        // ELIMINAR DEL CARRITO
         let botonEliminar = document.getElementById(`botonEliminar${productoEnCarrito.id}`)
         botonEliminar.addEventListener("click",  ()=>{
             eliminarProducto(productoEnCarrito.id);
         });
+        // SUMAR CANTIDAD
+        document.getElementById(`botonSumarUnidad${productoEnCarrito.id}`).addEventListener("click", ()=> {
+            productoEnCarrito.sumarCantidad()
+            localStorage.setItem("carrito", JSON.stringify(array))
+            MostrarProductosEnCarrito(array)
+        })
+        // RESTAR CANTIDAD  
+        document.getElementById(`botonEliminarUnidad${productoEnCarrito.id}`).addEventListener("click", ()=>{
+            productoEnCarrito.restaCantidad()
+            if( productoEnCarrito.cantidad <= 0 ){
+                let nuevoCarrito2 = [];
+                array.forEach((bebida) => {
+                    if(bebida.id != productoEnCarrito.id)
+                        nuevoCarrito2.push(bebida);
+                });
+
+                array = nuevoCarrito2;
+            }
+            localStorage.setItem("carrito", JSON.stringify(array))
+            MostrarProductosEnCarrito(array)
+        })
+
     })
+
     calcularTotal(array)
 }
 // CALCULAR EL PRECIO TOTAL DEL CARRITO
-let precioTotal = document.getElementById("precioTotal")
 function calcularTotal(array){
-    let total = array.reduce((acc, productoCarrito) => acc + productoCarrito.precio, 0)
+    let total = array.reduce((acc, productoCarrito) => acc + productoCarrito.precio*productoCarrito.cantidad, 0)
     console.log(total)
     precioTotal.innerHTML = `El total del carrito es $${total}`     
 }
