@@ -271,4 +271,13 @@ const eliminarProducto = (id) => {
     )
 
 }
-
+//  FINALIZAR COMPRA - ESTILO
+document.getElementById("botonFinalizarCompra").addEventListener("click", ()=>{
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Su compra ha sido finalizada',
+        showConfirmButton: false,
+        timer: 2500
+      })
+})
